@@ -11,10 +11,12 @@ Telemetry tool for racing simulators is at
 https://www.racedepartment.com/downloads/telemetry-application-v10.34318/ 
 
 I have
-- Added UDP functionality to send the Shared Memory structs via UDP
-- Changed/fixed key input reading to avoid AV flagging of the compiled code
-- Added 1 byte to the start of each packet to indicate the type of packet
-- Some cleaning + added some comments
+- added UDP networking, so the data can be send via UDP
+- changed key input reading to not trigger AV warnings in compiled code
+- added to the UDP packets extra bit to indicate, which packet is sent
+- added RelayVersion struct to notify via UDP the version of the UDP_Relay
+- cleaned the code a bit and added some comments
+
 
 I have shared this, so others can also benefit from the code.
 
