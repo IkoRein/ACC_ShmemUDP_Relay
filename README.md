@@ -13,3 +13,5 @@ I have:
 - cleaned the code a bit and added some comments
 
 Posted this here, so others can also take advantage of this.
+
+If there is some super serious bug or new version of the SHMEM spec, I will update this code.
