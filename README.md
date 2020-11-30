@@ -2,7 +2,8 @@
 
 Tool to send the Shared Memory contents from Assetto Corsa Competizione (ACC) via UDP
 
-This code is based on Kunos Simulation and Ensi Ferrum's Assetto Corsa Competizione shared memory example.
+This code is based on Kunos Simulation and Ensi Ferrum's Assetto Corsa Competizione shared memory example at
+https://www.assettocorsa.net/forum/index.php?threads/acc-shared-memory-documentation.59965/
 
 I have:
 - added UDP networking, so the data can be send via UDP
