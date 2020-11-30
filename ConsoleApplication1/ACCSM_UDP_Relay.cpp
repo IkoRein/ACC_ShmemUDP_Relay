@@ -43,13 +43,6 @@ const char* F12016 = "F1 2016 ";
 const char* NO_NEED = "You don't need this tool with ";
 const char* OR = " or ";
 
-template <typename T, unsigned S>
-inline unsigned arraysize(const T(&v)[S])
-{
-	return S;
-}
-
-
 struct SMElement
 {
 	HANDLE hMapFile;
@@ -61,16 +54,13 @@ const char* MAP_FAILED = "file mapping failed   ";
 const char* MAP_VIEW_FAIL = "map wiew failed   ";
 #define SEND_TO_FAILED "Send data via UDP failed because : %d" // //"sendto failed : %d"
 
-//#define MAXLINE 1024 
+//UDP default settings
 int PORT = 9996;
 char* IP = "127.0.0.1";
 
 SOCKET s;
 
-const char* LOCAL = "Local\\";
-const char* ACPMF = "acmpf";
-const char* PHYS = "Local\\acpmf_physics";
-
+// 
 SMElement m_physics;
 SMElement m_graphics;
 SMElement m_static;
@@ -79,7 +69,6 @@ void initPhysics()
 {
 
 	TCHAR szName[] = TEXT("Local\\acpmf_physics");
-	//TCHAR szName[] = TEXT(PHYS);
 
 	m_physics.hMapFile = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(SPageFilePhysics), szName);
 	if (!m_physics.hMapFile)
@@ -261,24 +250,7 @@ void readSettings() {
 				// TODO if line starts with #, do nothing
 
 				if (currentLine == 2) {
-					//&ip = &line;
-					//ip = new char[line.length() + 1];
 					ip = line;
-
-					//		char* cstr = new char[line.length() + 1];
-						//	strcpy(cstr, line.c_str());
-							//strcpy(IP, cstr);
-							//delete[]cstr;
-
-							//IP = ip;
-							//const char* cstr = line.c_str();
-							//strcpy(IP, cstr);
-							//IP = line;
-							//strcpy(IP, line.c_str());
-							/*int lineLne = line.length() + 1;
-							char newIp[lineLne];
-							*ip = *newIp;
-							strcpy(ip, line.c_str());*/
 					std::cout << "IP       : " << ip << std::endl;
 				}
 
@@ -320,7 +292,6 @@ struct RelayVersionInfoV2
 #pragma pack(pop)
 
 struct sockaddr_in si_other;
-//int s, slen = sizeof(si_other);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -408,18 +379,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	si_other.sin_family = AF_INET;
 	si_other.sin_port = htons(PORT);
 	si_other.sin_addr.S_un.S_addr = inet_addr(ip.c_str());
-	//si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-	//si_other.sin_addr.S_un.S_addr = InetPton(AF_INET, _T("127.0.0.1"), &si_other.sin_addr.S_un.S_addr);
 
 	///////////////////////////////////////
 	//
 	// This we will always send
 	//
 	//wcout << " Sending data  to " << ip.c_str() << ":" << PORT << "\n-----------------------------" << endl;
-
-
-	//start communication
-	//int recv_len;
 
 	//////////////////////////////////
 	//
@@ -440,12 +405,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	//wcout << "-#- SENT -STATIC- PACKET -#-" << endl;
 	//}
 
-	// TODO, maybe add here the default track to be Monza
-	//wchar_t defaultTrack[33] = L"monza";
-	//wcscpy_s(*ps->track, *defaultTrack);
-	//*ps->track = *defaultTrack;
-	//((ps)->track) = defaultTrack;
-
 	const char* message = static_cast<char*>(static_cast<void*>(ps));
 	char buffer[1 + sizeof SPageFileStatic];
 	//wcout << sizeof buffer << endl;
@@ -453,8 +412,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (int i = 0; i < sizeof SPageFileStatic; i++) {
 		buffer[i + 1] = message[i];
 	}
-
-	//if (sendto(s, static_cast<char*>(static_cast<void*>((SPageFileStatic*)m_static.mapFileBuffer)), sizeof SPageFileStatic, 0, (struct sockaddr*)& si_other, sizeof(si_other)) == SOCKET_ERROR)
 
 	///////////////////////////////
 	// Send one static
@@ -465,10 +422,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	//////////////////////////////
 	// And one version info
-	//if (sendto(s, (char*)&verbi, sizeof RelayVersionInfo, 0, (struct sockaddr*) & si_other, sizeof(si_other)) == SOCKET_ERROR) {
-	//	printf(SEND_TO_FAILED, WSAGetLastError()); // "sendto failed : %d"
-	//	exit(EXIT_FAILURE);
-	//}
 	//////////////////////////////
 	// And one version info V2
 	if (sendto(s, (char*)&versionInfov2, sizeof RelayVersionInfoV2, 0, (struct sockaddr*)&si_other, sizeof(si_other)) == SOCKET_ERROR) {
@@ -477,35 +430,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	//////////////////////////
-//
-// VAlues to test against, if we want
-// to send the data
-// 
+	//
+	// VAlues to test against, if we want
+	// to send the data
+	// 
 	int prevPacketTest = -1;
-
 	wchar_t carModelPrev[33];
-	//wcscpy_s(carModelPrev, ps->carModel);
-	//carModelPrev[32] = L'\0';
-
 	wchar_t trackPrev[33];
-	//wcscpy_s(trackPrev, ps->track);
-	//trackPrev[32] = L'\0';
-
-
-
 	long looped = 0;
 
 	//bool isConsoleWindowFocussed = (GetConsoleWindow() == GetForegroundWindow());
 
 	boolean run = true;
 	boolean endText = false;
-
-	//char ch;
-
 	DWORD        mode;          /* Preserved console mode */
 	INPUT_RECORD event;         /* Input event */
 
-/* Get the console input handle */
+	/* Get the console input handle */
 	HANDLE hstdin = GetStdHandle(STD_INPUT_HANDLE);
 
 	/* Preserve the original console mode */
@@ -515,9 +456,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetConsoleMode(hstdin, 0);
 
 	DWORD count;  /* ignored */
-
 	boolean otherKey = false;
-
 	boolean keyId = 0;
 
 	while (run) {
@@ -545,11 +484,6 @@ int _tmain(int argc, _TCHAR* argv[])
 			SPageFileGraphic* pg = (SPageFileGraphic*)m_graphics.mapFileBuffer;
 			SPageFileStatic* ps = (SPageFileStatic*)m_static.mapFileBuffer;
 		}
-
-		//char* staticFild = "1";
-		//std::string buf(staticFild);
-		//buf.append(static_cast<char*>(static_cast<void*>(ps)));
-		//wcout << buf.c_str() << " " << buf.length() << endl;
 
 		if (!m_graphics.hMapFile) {
 			wcout << MAP_FAILED << endl;
@@ -687,7 +621,6 @@ int _tmain(int argc, _TCHAR* argv[])
 			for (int i = 0; i < sizeof SPageFilePhysics; i++) {
 				buffer[i + 1] = message[i];
 			}
-
 
 			if (sendto(s, buffer, 1 + sizeof SPageFilePhysics, 0, (struct sockaddr*)&si_other, sizeof(si_other)) == SOCKET_ERROR)
 			{
