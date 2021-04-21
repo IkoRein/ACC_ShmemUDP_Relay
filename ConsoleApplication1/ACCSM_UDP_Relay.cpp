@@ -26,8 +26,8 @@
 using namespace std;
 
 /////////////////////////////////
-// Version of the toolTr
-float version = 1.06f;
+// Version of the tool
+float toolVersion = 1.09f;
 
 const char* THE_END = "Here is the end.";
 const char* PRESSED_ESC = "You pressed ESC key, so the application exits. ";
@@ -36,6 +36,7 @@ const char* ENJOYED = "I hope you enjoyed using this little tool. ";
 const char* MORE_TEXT = "Restart the relay to get data from ";
 const char* ACC = "Assetto Corsa Competizione";
 const char* PC2 = "Project Cars 2";
+const char* AMS2 = "Automobilista 2";
 const char* F12019 = "F1 2019 ";
 const char* F12018 = "F1 2018 ";
 const char* F12017 = "F1 2017 ";
@@ -211,7 +212,11 @@ void readSettings() {
 		}
 		else {
 			wcout << "failed to create the directory " << foldername_w << endl;
+
 			std::cout << "Using " << ip << ":" << port << " " << std::endl;
+			// Version 1.09,  this is not
+			// critical, if cannot write the settings file
+			// but return just in case 
 			return;
 			// Failed to create directory.
 		}
@@ -233,7 +238,7 @@ void readSettings() {
 		//char ip[] = SERVER;
 
 		std::ifstream myfile;
-		wcout << "\nVersion " << (float)version << "\n For Assetto Corsa Competizione\n" << endl;
+		wcout << "\nVersion " << (float)toolVersion << "\n For Assetto Corsa Competizione\n" << endl;
 
 		wcout << "Reading '" << SETTINGS_FILE << "' from \n " << folder.c_str() << "\n" << endl; // Was SETTINGS_FILE
 
@@ -287,7 +292,7 @@ void readSettings() {
 struct RelayVersionInfoV2
 {
 	byte type = 42;
-	float version = 1.04f;
+	float version;
 };
 #pragma pack(pop)
 
@@ -296,8 +301,11 @@ struct sockaddr_in si_other;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	// TODO, make in V1.04 this to be the relay version packet
-	RelayVersionInfoV2 versionInfov2 = { 42, version };
-	//wcout << "Size of V2 " << sizeof foov2 << endl;
+	RelayVersionInfoV2 versionInfov2 = { 42, toolVersion };
+	//wcout << "Size of Phys " << sizeof RelayVersionInfoV2 << endl;
+	//wcout << "Size of Phys " << sizeof SPageFilePhysics << endl;
+	//wcout << "Size of Graph " << sizeof SPageFileGraphic << endl;
+	//wcout << "Size of Stat " << sizeof SPageFileStatic << endl;
 	///////////////////////////////
 	//
 	// Ints
@@ -308,7 +316,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	initStatic();
 	//initUDP(PORT); // does not do anything yet.
 
-	struct RelayVersionInfo verbi = { 42, version };
+	//struct RelayVersionInfo verbi = { 42, version };
 
 	/////////////////////////////////
 	//

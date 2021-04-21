@@ -66,11 +66,12 @@ typedef int AC_FLAG_TYPE;
 #pragma pack(push)
 #pragma pack(4)
 
-struct RelayVersionInfo
-{
-    byte type;
-     float version;
-};
+// this is obsolete, but left the code here
+//struct RelayVersionInfo
+//{
+//    byte type;
+//     float version;
+//};
 
 struct SPageFilePhysics
 {
@@ -180,11 +181,12 @@ struct SPageFilePhysics
     float gVibrations;
     float absVibrations;
     // For future use
-    float new8;
-    float new9;
-    float new10;
-    float new11;
-    float new12;
+    wchar_t reserved[20];
+    //float new8;
+    //float new9;
+    //float new10;
+    //float new11;
+    //float new12;
 };
 
 
@@ -259,12 +261,39 @@ struct SPageFileGraphic
     wchar_t trackStatus[33];
     int missingMandatoryPits = 0;
     float clock = 0;
-    // added at 1.05, ACC 1.15
+    // added at 1.05, ACC 1.1.5
     int directionLightsLeft;
     int directionLightsRight;
+
+    // added at 1.07, ACC 1.7
+    int GlobalYellow;
+    int GlobalYellow1;
+    int GlobalYellow2;
+    int GlobalYellow3;
+    int GlobalWhite;
+    int GlobalGreen;
+    int GlobalChequered;
+    int GlobalRed;
+    int mfdTyreSet;
+    float mfdFuelToAdd;
+    float mfdTyrePressureFL;
+    float mfdTyrePressureFR;
+    float mfdTyrePressureRL;
+    float mfdTyrePressureRR;
+    // added at 1.08, ACC 1.7.4
+    int trackGripStatus;
+    int rainIntensity;
+    int rainIntensity10min;
+    int rainIntensity30min;
+    // added at 1.09, ACC 1.7.6
+    int currentTyreSet;
+    int strategyTyreSet;
+
     // For future use ...
-    float new3;
-    float new4;
+
+    wchar_t reserved[20];
+    //float new3;
+    //float new4;
 };
 
 
@@ -323,11 +352,18 @@ struct SPageFileStatic
     int PitWindowStart = 0;
     int PitWindowEnd = 0;
     int isOnline = 0;
-    // for future use
-    int new1;
-    int new2;
-    int new3;
-    int new4;
+
+    // added at 1.07, ACC 1.7
+    wchar_t dryTyresName[33];
+    wchar_t wetTyresName[33];
+
+     // for future use
+    wchar_t reserved[20];
+   
+    //int new1;
+    //int new2;
+    //int new3;
+    //int new4;
 };
 
 
